@@ -37,13 +37,17 @@ class Board {
             }
         }
 
+        // get Entities' symbols and put them on the field
         for (int i = 0; i < 15; i++) {
-            // get Entities' symbols and put them on the field
             game_field[friends[i].get_self_position().second]
                       [friends[i].get_self_position().first] =
                           friends[i].symbol;
         }
         // put the robot on the board
+        game_field[player.get_self_position().first]
+                  [player.get_self_position().second] = player.get_symbol();
+        y = player.get_self_position().first;
+        x = player.get_self_position().second;
     }
 
     // MAIN GAME FUNCTION
@@ -54,36 +58,40 @@ class Board {
             square();
         }
 
+        clear_screen();
         cout << "GAME OVER";
     }
 
     void square() {
         // get char input
         int a = getch();
+        if (a == 49) player.found_kitten = true;
 
+        pair<int, int> old_location = player.get_self_position();
         // walk the robot
-        if (a == 65 && y > 0) {
+        if (a == 65 && y - 1 > 0) {
             y -= 1;
             player.moveDown();
-            // game_field = player.moveDown();
         }
-        if (a == 66 && y > 0) {
+        if (a == 66 && y + 1 < 29) {
             y += 1;
             player.moveUp();
         }
-        if (a == 68 && x > 0) {
+        if (a == 68 && x - 1 > 0) {
             x -= 1;
             player.moveLeft();
         }
-        if (a == 67 && y > 0) {
+        if (a == 67 && x + 1 < 79) {
             x += 1;
             player.moveRight();
         }
 
+        pair<int, int> new_location = player.get_self_position();
+
         clear_screen();
-        // Robot.play() -- reads the
-        cout << "Hello";
+        player.play(game_field, old_location, new_location);
         print_square(game_field);
+        cout << "press 1 to Quit";
     }
 
     void print_square(char v[30][80]) {
